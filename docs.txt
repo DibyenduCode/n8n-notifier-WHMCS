@@ -1,0 +1,211 @@
+📘 n8nnotifier – WHMCS Addon Module Documentation
+1. Introduction
+
+The n8nnotifier module is a custom WHMCS Addon Module designed to display notifications (such as login/register alerts, announcements, or custom messages) directly in the WHMCS Client Area.
+It also provides an Admin Configuration Panel to manage notifications, making it easier for administrators to control what clients see.
+
+2. File Structure
+
+After extraction, the module contains the following files:
+
+modules/addons/n8nnotifier/
+ ├── n8n.png                 → Module icon
+ ├── n8nnotifier.php         → Core module file (defines addon logic)
+ ├── readme.txt.txt          → Basic text readme (developer notes)
+ ├── tplfileupdatedcode      → Template code snippet (possibly a hook or HTML)
+ ├── lang/
+ │    └── english.php        → Language strings (English translations)
+ └── templates/
+      └── config.tpl         → Admin configuration page (Smarty template)
+
+Explanation of Files:
+
+n8nnotifier.php → The main addon module file. Defines:
+
+Module metadata (name, version, author)
+
+Activation / Deactivation hooks
+
+Configuration options
+
+Admin output functions
+
+english.php → Stores language strings so you can easily translate text.
+
+config.tpl → Template for the admin configuration page (HTML + Smarty).
+
+tplfileupdatedcode → Likely contains updated code for client area display (hook integration).
+
+n8n.png → Icon for the module in WHMCS Admin.
+
+3. Installation Guide
+
+Follow these steps to install the addon:
+
+Upload Files
+Copy the folder n8nnotifier into your WHMCS addons directory:
+
+/path-to-whmcs/modules/addons/n8nnotifier/
+
+
+Activate the Module
+
+Log in to WHMCS Admin Area
+
+Navigate to:
+Setup → Addon Modules
+
+Find n8nnotifier in the list
+
+Click Activate
+
+Configure Permissions
+
+Once activated, click Configure
+
+Assign which Admin Roles can access the module.
+
+Database Setup
+
+On activation, the module creates necessary database tables (if coded in n8nnotifier.php).
+
+On deactivation, these tables may be dropped. (This ensures cleanup.)
+
+Verify Installation
+
+You should now see a menu item in the Addons → n8nnotifier section.
+
+4. Admin Panel Features
+
+The Admin Panel (accessed via Addons → n8nnotifier) provides options for managing the notification system.
+
+Possible Features (based on code & template):
+
+✅ Add or edit custom notifications
+
+✅ Enable/Disable notifications
+
+✅ Control where notifications are shown (Login, Register, All Client Area pages)
+
+✅ Manage styles (custom HTML / CSS in tplfileupdatedcode)
+
+✅ Multi-language support via lang/english.php
+
+5. Client Area Features
+
+Depending on configuration, clients may see:
+
+🔹 Login Notification → A styled banner when logging in.
+
+🔹 Register Notification → Custom text shown on registration.
+
+🔹 General Notification → Any configured message from Admin.
+
+🔹 Custom UI → Since templates are editable, you can display announcements, coupon codes, or promotional banners.
+
+6. Hooks & Integration
+
+Although the main hook file isn’t fully visible, based on WHMCS standards, this module likely integrates via hooks such as:
+
+ClientAreaPrimarySidebar → Add sidebar notification.
+
+ClientLogin / ClientLoginShare → Show login-based messages.
+
+ClientAreaPage → Insert banner on selected pages.
+
+The file tplfileupdatedcode probably contains HTML/JS/CSS to inject styled notifications into the client area.
+
+7. Language Support
+
+Located in:
+
+modules/addons/n8nnotifier/lang/english.php
+
+
+This file allows translation of all admin and client-facing text. Example:
+
+$_ADDONLANG['title'] = "n8n Notifier";
+$_ADDONLANG['description'] = "Custom client notifications and announcements.";
+
+
+You can create other languages by copying english.php into another language file (e.g., french.php).
+
+8. Customization Guide
+
+You can customize the look and behavior of notifications:
+
+Modify HTML/CSS
+
+Edit the file: tplfileupdatedcode
+
+Add your own Bootstrap/Tailwind classes or inline CSS.
+
+Change Notification Text
+
+Update values in english.php or Admin Panel.
+
+Replace Module Icon
+
+Replace n8n.png with your own logo.
+
+Extend with Hooks
+
+Add new hooks in n8nnotifier.php to show notifications in different areas (Invoices, Tickets, Orders, etc.).
+
+9. Troubleshooting
+❌ Error: Too few arguments to function select_query()
+
+WHMCS 8+ requires 3+ arguments for select_query.
+
+Ensure your database queries follow:
+
+select_query('table', 'fields', ['conditions']);
+
+❌ Notifications not showing
+
+Ensure hooks are properly registered in n8nnotifier.php.
+
+Check tplfileupdatedcode contains valid HTML/Smarty code.
+
+Clear WHMCS template cache.
+
+❌ Module not activating
+
+Verify folder path: /modules/addons/n8nnotifier/
+
+File permissions: 644 for PHP, 755 for folders.
+
+10. Future Improvements
+
+This addon can be extended with more advanced features:
+
+🔔 n8n Workflow Integration → Trigger n8n workflows when a client logs in or registers.
+
+📧 Email Notifications → Send styled emails along with client area messages.
+
+📱 Push Notifications → Integrate with Firebase or OneSignal.
+
+🎨 Advanced UI → Add dismissible banners, modal popups, and animations.
+
+📊 Analytics → Track how many users saw/dismissed notifications.
+
+🔄 Cron Support → Show time-based notifications (e.g., limited offer ends in 24h).
+
+11. Uninstallation
+
+Go to Setup → Addon Modules
+
+Find n8nnotifier and click Deactivate
+
+(Optional) Delete the folder:
+
+/modules/addons/n8nnotifier/
+
+
+Remove database tables if they remain (check n8nnotifier.php deactivate function).
+
+12. Conclusion
+
+The n8nnotifier addon is a flexible WHMCS module for managing client area notifications.
+It can be used for promotional messages, login/register alerts, or extended with n8n automation.
+With customizable templates, language support, and admin configuration, it provides a solid foundation for client-side notification systems.

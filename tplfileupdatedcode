@@ -1,0 +1,325 @@
+Put on your active templates/clientareaproductdetails.tpl where you need to show the design.
+Note:N8n Notifier Module must be acivated if you want to show the logo of n8n on your clientareaproductdetails page
+
+
+
+
+{if $customfields}
+
+    {assign var="n8nUrl" value=""}
+    {assign var="n8nContainerId" value=""}
+
+    {foreach from=$customfields item=field}
+        {if $field.name eq "n8n Instance URL"}
+            {assign var="n8nUrl" value=$field.value}
+        {/if}
+        {if $field.name eq "n8n Container ID"}
+            {assign var="n8nContainerId" value=$field.value}
+        {/if}
+    {/foreach}
+
+    {* Pending Section: Timer removed *}
+    {if $status eq "Pending"}
+        <div class="n8n-container deploying-container">
+            <div class="card pending-card">
+                <div class="header">
+                    <div class="loader-circle"></div>
+                    <h2>🚀 Deploying Your n8n Instance...</h2>
+                </div>
+                <p class="subtitle">This may take a few moments. We'll let you know as soon as it's ready!</p>
+                <div class="progress-bar-container">
+                    <div class="progress-bar"></div>
+                </div>
+                <ul class="deployment-steps">
+                    <li class="step active">Initializing server</li>
+                    <li class="step">Starting Docker container</li>
+                    <li class="step">Configuring domain & SSL</li>
+                    <li class="step">Finalizing setup</li>
+                </ul>
+            </div>
+        </div>
+
+        {literal}
+        <script>
+        let steps = document.querySelectorAll('.deployment-steps .step');
+        let currentStep = 0;
+
+        function updateSteps() {
+            steps.forEach((step, index) => {
+                if (index <= currentStep) {
+                    step.classList.add('completed');
+                } else {
+                    step.classList.remove('completed');
+                }
+            });
+            if (currentStep < steps.length - 1) {
+                currentStep++;
+            } else {
+                currentStep = 0; 
+            }
+        }
+
+        setInterval(updateSteps, 80000); 
+        </script>
+        {/literal}
+
+    {* Active Section *}
+    {elseif $status eq "Active" && $n8nUrl ne ""}
+        <div class="n8n-container active-container">
+            <div class="card active-card">
+                <div class="header">
+                    <img src="/modules/addons/n8nnotifier/n8n.png" width="60" alt="n8n logo" />
+                    <h2>n8n Instance Portal</h2>
+                </div>
+                <p class="subtitle">Your automation instance is live and ready for action!</p>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Status</span>
+                        <div class="info-value status-active">
+                            <span class="status-dot"></span> Active
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Instance URL</span>
+                        <div class="info-value">
+                            <a href="{$n8nUrl}" target="_blank" class="url-link">{$n8nUrl}</a>
+                            <button class="copy-btn" onclick="copyToClipboard('{$n8nUrl}')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2Zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6ZM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1H2Z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <a href="{$n8nUrl}" target="_blank" class="launch-btn">
+                    🚀Launch n8n
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="launch-icon" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-4a.5.5 0 0 1 1 0v4a.5.5 0 0 1-.5.5Zm-2-12a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0V3.707l-3.354 3.353a.5.5 0 0 1-.708-.707L11.293 3h-1.043a.5.5 0 0 1-.5-.5ZM.5 15a.5.5 0 0 1-.5-.5V1.5a1.5 1.5 0 0 1 1.5-1.5h11A1.5 1.5 0 0 1 14 1.5v2a.5.5 0 0 1-1 0V2a.5.5 0 0 0-.5-.5h-11a.5.5 0 0 0-.5.5v11a.5.5 0 0 0 .5.5h5.5a.5.5 0 0 1 0 1H1.5A1.5 1.5 0 0 1 0 13.5v-11.5a.5.5 0 0 1 .5-.5Z"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+
+        {literal}
+        <script>
+            function copyToClipboard(text) {
+                navigator.clipboard.writeText(text).then(() => {
+                    const button = document.querySelector('.copy-btn');
+                    const originalText = button.innerHTML;
+                    button.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16"><path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.011l-3.5-3.5a.733.733 0 0 1 1.047-1.045L7.218 10.45l5.518-5.49a.733.733 0 0 1 0-1.04Z"/></svg>';
+                    setTimeout(() => {
+                        button.innerHTML = originalText;
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Failed to copy text: ', err);
+                });
+            }
+        </script>
+        {/literal}
+
+    {* Suspended Section *}
+    {elseif $n8nUrl ne ""}
+        <div class="n8n-container suspended-container">
+            <div class="card suspended-card">
+                <div class="header">
+                    <img src="/modules/addons/n8nnotifier/n8n.png" width="60" alt="n8n logo" />
+                    <h2>n8n Instance Portal</h2>
+                </div>
+                <p class="subtitle"></p>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Status</span>
+                        <div class="info-value status-suspended">
+                            <span class="status-dot"></span> {$status}
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Reason</span>
+                        <div class="info-value">Please contact support for more details.</div>
+                    </div>
+                </div>
+                <a href="/clientarea.php?action=contact" class="support-btn">
+                    Contact Support
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="support-icon" viewBox="0 0 16 16">
+                        <path d="M.052 3.264a.5.5 0 0 1 .536-.089l1.588.665a.5.5 0 0 1 .31.425v.75a.5.5 0 0 1-1 .046V4.76l-1.55-.632a.5.5 0 0 1-.034-.864Z"/>
+                        <path d="M12.915 2.146a.5.5 0 0 1 .51.139l1.587.665a.5.5 0 0 1 .31.425v.75a.5.5 0 0 1-1 .046v-.75l-1.55-.632a.5.5 0 0 1-.034-.864Z"/>
+                        <path d="M12.915 13.854a.5.5 0 0 0 .51-.139l1.587-.665a.5.5 0 0 0 .31-.425v-.75a.5.5 0 0 0-1-.046v.75l-1.55.632a.5.5 0 0 0-.034.864Z"/>
+                        <path d="M3.568 13.84a.5.5 0 0 0 .536.089l1.588-.665a.5.5 0 0 0 .31-.425v-.75a.5.5 0 0 0-1-.046v.75l-1.55.632a.5.5 0 0 0-.034.864Z"/>
+                        <path fill-rule="evenodd" d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14Zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16Z"/>
+                        <path d="M8 4.293a1 1 0 0 1 1 1V6a.5.5 0 0 1-1 0V5.293a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5V7a.5.5 0 0 1-1 0V5.5a1.5 1.5 0 0 1 1.5-1.5h1A1.5 1.5 0 0 1 8 4.293ZM10.5 8a.5.5 0 0 1 .5.5V11a..5.5 0 0 1-1 0V8.5a.5.5 0 0 1 .5-.5Zm-5 0a.5.5 0 0 1 .5.5V11a.5.5 0 0 1-1 0V8.5a.5.5 0 0 1 .5-.5Z"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    {/if}
+{/if}
+
+<style>
+
+:root {
+    --primary: #f97316;
+    --primary-dark: #ea580c;
+    --pending-bg: #f3f4f6;
+    --pending-border: #d1d5db;
+    --pending-text: #4b5563;
+    --active-bg: #e5f9e2;
+    --active-border: #a4e59c;
+    --active-text: #1b8a00;
+    --suspended-bg: #ffebeb;
+    --suspended-border: #f8baba;
+    --suspended-text: #cc0000;
+    --card-bg: #fff;
+    --shadow-light: 0 10px 30px rgba(0, 0, 0, 0.05);
+    --shadow-hover: 0 15px 40px rgba(0, 0, 0, 0.1);
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f0f2f5;
+}
+
+.n8n-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 100px);
+    padding: 2rem 1rem;
+}
+
+.card {
+    background: var(--card-bg);
+    border-radius: 1.5rem;
+    box-shadow: var(--shadow-light);
+    max-width: 900px;
+    width: 100%;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-0.5rem);
+    box-shadow: var(--shadow-hover);
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.header img {
+    margin-bottom: 0.5rem;
+}
+
+.header h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1a202c;
+}
+
+.subtitle {
+    font-size: 1rem;
+    color: #718096;
+    margin-bottom: 2rem;
+}
+
+
+.pending-card {
+    border: 2px solid var(--pending-border);
+}
+
+.loader-circle {
+    width: 4rem;
+    height: 4rem;
+    border: 0.5rem solid #e0e7ee;
+    border-top: 0.5rem solid var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1.5rem;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.progress-bar-container {
+    width: 100%;
+    height: 8px;
+    background-color: #e0e7ee;
+    border-radius: 4px;
+    margin: 1.5rem 0;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0;
+    background-color: var(--primary);
+    animation: progress-fill 20s linear infinite;
+    transition: width 0.3s ease;
+}
+
+@keyframes progress-fill {
+    0% { width: 0; }
+    100% { width: 100%; }
+}
+
+.deployment-steps {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: left;
+    max-width: 400px;
+    margin: 0 auto 1.5rem;
+}
+
+.deployment-steps .step {
+    position: relative;
+    padding-left: 25px;
+    color: var(--pending-text);
+    transition: color 0.3s ease;
+}
+
+.deployment-steps .step::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: var(--pending-border);
+    transition: background-color 0.3s ease;
+}
+
+.deployment-steps .step.completed::before {
+    background-color: var(--primary);
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px var(--primary);
+    animation: pulse-border 1.5s infinite;
+}
+.deployment-steps .step.completed {
+    color: #000;
+    font-weight: 500;
+}
+
+@keyframes pulse-border {
+    0% { box-shadow: 0 0 0 0 var(--primary); }
+    70% { box-shadow: 0 0 0 10px rgba(249, 115, 22, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0); }
+}
+
+
+.active-card { border: 2px solid var(--active-border); }
+.suspended-card { border: 2px solid var(--suspended-border); }
+
+.info-grid { display: grid; gap: 1.5rem; margin-bottom: 2rem; text-align: left; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+.info-item { background-color: #f7fafc; padding: 1rem 1.5rem; }
+</style>
