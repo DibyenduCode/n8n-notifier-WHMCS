@@ -105,12 +105,6 @@ The addon comes with two email templates:
 
 ------------------------------------------------------------------------
 
-📬 Support
-
-For issues or feature requests:
-- Call us:+8801570212139
-- WhatsApp:https://wa.me/8801570212139
-
 
 Thank You
-Tup Hoster Ltd
+https://zweilo.com/
